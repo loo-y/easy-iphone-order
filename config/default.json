@@ -1,10 +1,10 @@
 {
-  "username": "",
-  "password": "",
-  "items": [],
-  "personalInfo": {
-    "name": "",
-    "idNumber": ""
-  },
-  "paymentMethod": ""
+    "username": "",
+    "password": "",
+    "items": [],
+    "personalInfo": {
+        "name": "",
+        "idNumber": ""
+    },
+    "paymentMethod": ""
 }
