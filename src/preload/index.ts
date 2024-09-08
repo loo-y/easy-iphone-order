@@ -5,6 +5,7 @@ import { contextBridge, ipcRenderer } from 'electron'
 
 // 暴露服务给window.electronAPI用客户端使用
 contextBridge.exposeInMainWorld('electronAPI', {
+    orderiPhone: () => ipcRenderer.invoke('order-iPhone'),
     minimizeToTray: () => ipcRenderer.send('minimize-to-tray'),
     // minimizeToTray: () => ipcRenderer.invoke('minimize-to-tray'),
     readFile: (filePath: string) => ipcRenderer.invoke('read-file', filePath),

@@ -1,4 +1,7 @@
 export const electronServices = {
+    orderiPhone: () => {
+        window.electronAPI.orderiPhone()
+    },
     minimizeToTray: () => {
         window.electronAPI.minimizeToTray()
     },

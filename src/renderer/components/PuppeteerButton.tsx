@@ -8,7 +8,8 @@ const PuppeteerButton: React.FC = () => {
         setStatus('正在启动...')
         // const result = await createPuppeteerService()
         // setStatus(result?.status === 'success' ? '成功' : '失败')
-        electronServices.minimizeToTray()
+        // electronServices.minimizeToTray()
+        electronServices.orderiPhone()
     }
 
     return (

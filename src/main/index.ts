@@ -46,7 +46,23 @@ const createWindow = (): void => {
 
     createTray()
 
+    setupMenus()
+
     setupServices()
+}
+
+// TODO 似乎没起作用
+function setupMenus() {
+    // 在 macOS 上，添加一个菜单项来退出应用
+    if (process.platform === 'darwin') {
+        const menu = Menu.buildFromTemplate([
+            {
+                label: app.name,
+                submenu: [{ role: 'about' }, { type: 'separator' }, { role: 'quit' }],
+            },
+        ])
+        Menu.setApplicationMenu(menu)
+    }
 }
 
 function createTray() {
