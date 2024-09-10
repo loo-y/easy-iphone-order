@@ -1,12 +1,12 @@
 import puppeteer, { Browser } from 'puppeteer'
 import { ipcMain, BrowserWindow } from 'electron'
-import { applePageUrl, puppeteerOptions } from '../../shared/constants'
+import { applePageUrl, iPhoneModels, puppeteerOptions } from '../../shared/constants'
 import { getPageInitInfo } from './helpers'
 
-const createiPhoneOrderService = async (browser: Browser) => {
+const createiPhoneOrderService = async (params: { browser: Browser; iPhoneModel: string }) => {
     try {
         // 创建新页面
-        await addIPhoneToCart(browser)
+        await addIPhoneToCart(params)
 
         // 关闭浏览器
         // await browser.close()
@@ -20,33 +20,31 @@ const createiPhoneOrderService = async (browser: Browser) => {
 }
 
 // 访问 apple iPhone16 网站，加购 iPhone16 进购物车
-const addIPhoneToCart = async (browser: Browser) => {
+const addIPhoneToCart = async ({ browser, iPhoneModel }: { browser: Browser; iPhoneModel: string }) => {
     try {
         const page = await browser.newPage()
 
-        // 访问 iPhone 15 页面
-        await page.goto('https://www.apple.com.cn/iphone-15/')
-        const bodyHandle = await page.$('body')
-        console.log(`bodyHandle`, bodyHandle)
-        const html = await page.evaluate(async body => {
-            console.log(`body`, body)
-            return body.innerHTML
-        }, bodyHandle)
-        await bodyHandle.dispose()
+        // 访问 iPhone 16 Pro 页面
+        const url = `${applePageUrl.buyiPhone16Pro}${iPhoneModel}`
+        await page.goto(url)
+        // const bodyHandle = await page.$('body')
+        // console.log(`bodyHandle`, bodyHandle)
+        // const html = await page.evaluate(async body => {
+        //     console.log(`body`, body)
+        //     return body.innerHTML
+        // }, bodyHandle)
+        // await bodyHandle.dispose()
         // console.log(`html`, html)
         // console.log(`getPageInitInfo`, getPageInitInfo)
-        // const result = await page.evaluate(
-        //     (getPageInitInfoFunc) => {
-        //         return new Promise((resolve) => {
-        //             getPageInitInfoFunc(document).then(pageInfo => {
-        //                 resolve({ success: true, pageInfo });
-        //             }).catch(e => {
-        //                 resolve({ success: false, error: e.toString() });
-        //             });
-        //         });
-        //     },
-        //     getPageInitInfo // 将函数作为参数传递
-        // );
+        // await page.exposeFunction("getPageInitInfo", getPageInitInfo.bind(page));
+
+        // const result = await page.evaluate(async () => {
+        //     alert(`document`)
+        //     console.log(`getPageInitInfo`, getPageInitInfo)
+        //     const result = await getPageInitInfo()
+        // });
+
+        const result = await page.evaluate(getPageInitInfo)
 
         // console.log('页面评估结果:', result);
 
@@ -69,7 +67,7 @@ const addIPhoneToCart = async (browser: Browser) => {
     }
 }
 
-const orderServices = () => {
+const orderServices = (iPhoneModel: string) => {
     ipcMain.handle('order-iPhone', async (event, order: string) => {
         // 启动浏览器
         const browser = await puppeteer.launch({
@@ -81,7 +79,8 @@ const orderServices = () => {
                 height: 1000,
             },
         })
-        return await createiPhoneOrderService(browser)
+
+        return await createiPhoneOrderService({ browser, iPhoneModel })
     })
 }
 

@@ -37,6 +37,7 @@ const createWindow = (): void => {
     mainWindow.on('close', e => {
         e.preventDefault()
         mainWindow.hide()
+        app.quit()
     })
 
     mainWindow.on('closed', () => {

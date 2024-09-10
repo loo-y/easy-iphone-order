@@ -1,7 +1,7 @@
 import { applePageUrl, commonHeaders } from '../../shared/constants'
 
-export const getPageInitInfo = async (document: Document) => {
-    console.log(`getPageInitInfo`)
+export const getPageInitInfo = async () => {
+    console.log(`in getPageInitInfo`)
     let partNumber, x_aos_stk
     const initData = document.getElementById('init_data')?.textContent
     const initDataJson: Record<string, any> = initData ? JSON.parse(initData) : {}
