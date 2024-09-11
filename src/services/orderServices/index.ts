@@ -2,6 +2,9 @@ import puppeteer, { Browser } from 'puppeteer'
 import { ipcMain, BrowserWindow } from 'electron'
 import { applePageUrl, iPhoneModels, puppeteerOptions } from '../../shared/constants'
 import { getPageInitInfo } from './helpers'
+import fs from 'fs'
+import path from 'path'
+import { OrderServicesInjects } from '../../shared/types'
 
 const createiPhoneOrderService = async (params: { browser: Browser; iPhoneModel: string }) => {
     try {
@@ -24,6 +27,12 @@ const addIPhoneToCart = async ({ browser, iPhoneModel }: { browser: Browser; iPh
     try {
         const page = await browser.newPage()
 
+        // 读取打包后的 JS 文件
+        const bundledCode = fs.readFileSync(path.join(__dirname, '../../dist/orderServicesInjects.bundle.js'), 'utf8')
+
+        // 注入打包后的代码
+        await page.evaluateOnNewDocument(bundledCode)
+
         // 访问 iPhone 16 Pro 页面
         const url = `${applePageUrl.buyiPhone16Pro}${iPhoneModel}`
         await page.goto(url)
@@ -44,7 +53,10 @@ const addIPhoneToCart = async ({ browser, iPhoneModel }: { browser: Browser; iPh
         //     const result = await getPageInitInfo()
         // });
 
-        const result = await page.evaluate(getPageInitInfo)
+        const result = await page.evaluate(() => {
+            // 现在 orderServices 对象应该包含了我们导出的所有函数
+            return (window as Window & typeof globalThis).orderServicesInjects.getPageInitInfo()
+        })
 
         // console.log('页面评估结果:', result);
 

@@ -11,9 +11,29 @@ import { FuseV1Options, FuseVersion } from '@electron/fuses'
 import { mainConfig } from './webpack.main.config'
 import { rendererConfig } from './webpack.renderer.config'
 
+const preBuild = async () => {
+    const { exec } = require('child_process')
+    return new Promise((resolve, reject) => {
+        exec('npm run build:orderServicesInjects', (error, stdout, stderr) => {
+            if (error) {
+                console.error(`执行出错: ${error}`)
+                return reject(error)
+            }
+            console.log(`stdout: ${stdout}`)
+            console.error(`stderr: ${stderr}`)
+            resolve(true)
+        })
+    })
+}
+
 const config: ForgeConfig = {
     packagerConfig: {
         asar: true,
+    },
+    hooks: {
+        preMake: async () => {
+            await preBuild()
+        },
     },
     rebuildConfig: {},
     makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],

@@ -7,8 +7,13 @@ interface ElectronAPI {
 
 export {}
 
+export interface OrderServicesInjects {
+    getPageInitInfo: () => Promise<any> // 根据实际返回类型调整
+}
+
 declare global {
     interface Window {
         electronAPI: ElectronAPI
+        orderServicesInjects: OrderServicesInjects
     }
 }
