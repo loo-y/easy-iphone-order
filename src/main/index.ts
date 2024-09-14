@@ -17,6 +17,7 @@ let tray: Tray | null = null
 let mainWindow: BrowserWindow | null = null
 
 const createWindow = (): void => {
+    console.log('createWindow')
     // Create the browser window.
     mainWindow = new BrowserWindow({
         height: 1200,
@@ -32,7 +33,7 @@ const createWindow = (): void => {
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 
     // 点击关闭时仅隐藏
     mainWindow.on('close', e => {
@@ -45,6 +46,11 @@ const createWindow = (): void => {
         // mainWindow = null;
         // mainWindow.hide()
     })
+
+    if (mainWindow) {
+        mainWindow.show()
+        mainWindow.focus()
+    }
 
     createTray()
 
@@ -68,7 +74,7 @@ function setupMenus() {
 }
 
 function createTray() {
-    console.log('createTray', !!tray)
+    console.log('createTray, tray is existd: ', !!tray)
     if (tray !== null && !tray.isDestroyed()) {
         console.log('Tray 已存在，不需要重新创建')
         return
@@ -86,7 +92,14 @@ function createTray() {
                 }
             },
         },
-        { label: '退出', click: () => app.quit() },
+        {
+            label: '退出',
+            click: () => {
+                console.log('click on 退出')
+                app.quit()
+                app.exit()
+            },
+        },
     ])
     tray.setToolTip('Puppeteer 服务控制')
     tray.setContextMenu(contextMenu)
@@ -94,7 +107,8 @@ function createTray() {
     tray.on('click', () => {
         console.log('Tray 被点击')
         if (tray && !tray.isDestroyed() && mainWindow && !mainWindow.isDestroyed()) {
-            mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
+            // mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
+            mainWindow.show()
         }
     })
 }
@@ -116,9 +130,11 @@ app.on('ready', createWindow)
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-    // if (process.platform !== 'darwin') {
-    app.quit()
-    // }
+    console.log(`window-all-closed`)
+    if (process.platform !== 'darwin') {
+        destroyTray()
+        app.quit()
+    }
 })
 
 app.on('before-quit', () => {
@@ -135,20 +151,17 @@ app.on('quit', () => {
     console.log('应用已退出')
 })
 
-// 处理窗口关闭
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        destroyTray()
-        app.quit()
-    }
-})
-
 app.on('activate', () => {
+    console.log('app activate')
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow()
+    } else {
+        mainWindow.show()
+        mainWindow.focus()
     }
+
     if (tray === null || tray.isDestroyed()) {
         createTray()
     }
