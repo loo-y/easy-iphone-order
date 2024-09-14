@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     orderiPhone: () => ipcRenderer.invoke('order-iPhone'),
     minimizeToTray: () => ipcRenderer.send('minimize-to-tray'),
     // minimizeToTray: () => ipcRenderer.invoke('minimize-to-tray'),
+    getiPhoneStock: (iPhoneModel: string) => ipcRenderer.invoke('getiPhoneStock', iPhoneModel),
     readFile: (filePath: string) => ipcRenderer.invoke('read-file', filePath),
     writeFile: (filePath: string, content: string) => ipcRenderer.invoke('write-file', filePath, content),
 })

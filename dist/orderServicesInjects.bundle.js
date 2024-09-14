@@ -9,14 +9,14 @@ var orderServicesInjects
                     var e, t, o, l, c, r, i, p
                     let u, d
                     console.log('in getPageInitInfo')
-                    const v =
+                    const m =
                             null === (e = document.getElementById('init_data')) || void 0 === e
                                 ? void 0
                                 : e.textContent,
-                        m = v ? JSON.parse(v) : {},
-                        { meta: n, checkout: y } = m || {}
+                        v = m ? JSON.parse(m) : {},
+                        { meta: n, checkout: y } = v || {}
                     d = null === (t = null == n ? void 0 : n.h) || void 0 === t ? void 0 : t['x-aos-stk']
-                    const M =
+                    const s =
                             (null ===
                                 (c =
                                     null ===
@@ -28,9 +28,9 @@ var orderServicesInjects
                                         : l.pickup) || void 0 === c
                                 ? void 0
                                 : c.items) || {},
-                        s = (null === (r = null == M ? void 0 : M.c) || void 0 === r ? void 0 : r[0]) || ''
-                    if (s) {
-                        const e = (M[s] || {}).d || {},
+                        M = (null === (r = null == s ? void 0 : s.c) || void 0 === r ? void 0 : r[0]) || ''
+                    if (M) {
+                        const e = (s[M] || {}).d || {},
                             t =
                                 null === (i = null == e ? void 0 : e.productEvar1) || void 0 === i
                                     ? void 0
@@ -63,7 +63,7 @@ var orderServicesInjects
             },
             709: (e, t) => {
                 Object.defineProperty(t, '__esModule', { value: !0 }),
-                    (t.commonHeaders = t.applePageUrl = t.iPhoneModels = t.puppeteerOptions = void 0)
+                    (t.commonHeaders = t.appleAPIUrl = t.applePageUrl = t.iPhoneModels = t.puppeteerOptions = void 0)
                 const o =
                     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36'
                 ;(t.puppeteerOptions = { userAgent: o }),
@@ -139,6 +139,10 @@ var orderServicesInjects
                         shoppingCartWithoutHost: '/shop/bag',
                         buyiPhoneWithoutHost: '/shop/buy-iphone',
                         buyiPhone16Pro: 'https://www.apple.com.cn/shop/buy-iphone/iphone-16-pro/',
+                    }),
+                    (t.appleAPIUrl = {
+                        checkStock: (e, t) =>
+                            `https://www.apple.com.cn/shop/fulfillment-messages?pl=true&mts.0=regular&mts.1=compact&parts.0=${e}&searchNearby=true&store=${t}`,
                     }),
                     (t.commonHeaders = {
                         accept: '*/*',

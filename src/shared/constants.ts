@@ -92,6 +92,11 @@ export const applePageUrl = {
     buyiPhone16Pro: `https://www.apple.com.cn/shop/buy-iphone/iphone-16-pro/`,
 }
 
+export const appleAPIUrl = {
+    checkStock: (iPhoneModel: string, storeNumber: string) =>
+        `https://www.apple.com.cn/shop/fulfillment-messages?pl=true&mts.0=regular&mts.1=compact&parts.0=${iPhoneModel}&searchNearby=true&store=${storeNumber}`,
+}
+
 export const commonHeaders = {
     accept: '*/*',
     'accept-language': 'zh-CN,zh;q=0.9',

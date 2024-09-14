@@ -3,3 +3,6 @@
 @tailwind utilities;
 
 /* 您的自定义样式可以放在这里 */
+root {
+    @apply h-screen
+}

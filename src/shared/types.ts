@@ -1,5 +1,6 @@
 interface ElectronAPI {
     orderiPhone: () => Promise<void>
+    getiPhoneStock: ({ iPhoneModel, storeNumber }: { iPhoneModel: string; storeNumber: string }) => Promise<any>
     minimizeToTray: () => void
     readFile: (filePath: string) => Promise<string>
     writeFile: (filePath: string, content: string) => Promise<boolean>

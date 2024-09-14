@@ -19,8 +19,9 @@ let mainWindow: BrowserWindow | null = null
 const createWindow = (): void => {
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        height: 800,
-        width: 1280,
+        height: 1200,
+        width: 500,
+        alwaysOnTop: true,
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
             nodeIntegration: true,
@@ -115,9 +116,9 @@ app.on('ready', createWindow)
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit()
-    }
+    // if (process.platform !== 'darwin') {
+    app.quit()
+    // }
 })
 
 app.on('before-quit', () => {

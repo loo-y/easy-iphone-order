@@ -2,6 +2,9 @@ export const electronServices = {
     orderiPhone: () => {
         window.electronAPI.orderiPhone()
     },
+    getiPhoneStock: async ({ iPhoneModel, storeNumber }: { iPhoneModel: string; storeNumber: string }) => {
+        return await window.electronAPI.getiPhoneStock({ iPhoneModel, storeNumber })
+    },
     minimizeToTray: () => {
         window.electronAPI.minimizeToTray()
     },

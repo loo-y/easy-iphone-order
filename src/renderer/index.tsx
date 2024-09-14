@@ -7,8 +7,4 @@ import '../styles/main.css'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 // 渲染 App 组件
-root.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>
-)
+root.render(<App />)
