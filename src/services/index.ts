@@ -14,4 +14,10 @@ export const electronServices = {
     writeFile: async (filePath: string, content: string): Promise<boolean> => {
         return await window.electronAPI.writeFile(filePath, content)
     },
+    getProvinces: async (): Promise<any> => {
+        return await window.electronAPI.getProvinces()
+    },
+    getCityList: async ({ provinceId }: { provinceId: string }): Promise<any> => {
+        return await window.electronAPI.getCityList({ provinceId })
+    },
 }

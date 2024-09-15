@@ -4,6 +4,8 @@ interface ElectronAPI {
     minimizeToTray: () => void
     readFile: (filePath: string) => Promise<string>
     writeFile: (filePath: string, content: string) => Promise<boolean>
+    getProvinces: () => Promise<any>
+    getCityList: ({ provinceId }: { provinceId: string }) => Promise<any>
 }
 
 export {}

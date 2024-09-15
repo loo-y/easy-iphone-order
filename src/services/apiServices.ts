@@ -1,6 +1,8 @@
 import { ipcMain } from 'electron'
 import _ from 'lodash'
 import { appleAPIUrl, commonHeaders } from '../shared/constants'
+import CityData from '../resources/location/city.json'
+import ProvinceData from '../resources/location/province.json'
 
 export default function apiServices() {
     ipcMain.handle(
@@ -37,4 +39,14 @@ export default function apiServices() {
             }
         }
     )
+
+    ipcMain.handle('getProvinces', async event => {
+        return ProvinceData
+    })
+
+    ipcMain.handle('getCityList', async (event, { provinceId }: { provinceId: string }) => {
+        const cityList = CityData?.[provinceId] || []
+        console.log(`CityData`, CityData?.[provinceId])
+        return cityList
+    })
 }

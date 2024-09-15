@@ -11,4 +11,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getiPhoneStock: (iPhoneModel: string) => ipcRenderer.invoke('getiPhoneStock', iPhoneModel),
     readFile: (filePath: string) => ipcRenderer.invoke('read-file', filePath),
     writeFile: (filePath: string, content: string) => ipcRenderer.invoke('write-file', filePath, content),
+    getProvinces: () => ipcRenderer.invoke('getProvinces'),
+    getCityList: (provinceId: string) => ipcRenderer.invoke('getCityList', provinceId),
 })
