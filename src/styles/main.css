@@ -81,6 +81,8 @@
 }
 
 /* 您的自定义样式可以放在这里 */
-root {
-    @apply h-screen
+#root{
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+  @apply h-screen
 }

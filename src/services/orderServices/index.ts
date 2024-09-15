@@ -1,6 +1,6 @@
 import puppeteer, { Browser } from 'puppeteer'
 import { ipcMain, BrowserWindow } from 'electron'
-import { applePageUrl, iPhoneModels, puppeteerOptions } from '../../shared/constants'
+import { applePageUrl, puppeteerOptions } from '../../shared/constants'
 import { getPageInitInfo } from './helpers'
 import fs from 'fs'
 import path from 'path'

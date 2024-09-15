@@ -42,42 +42,45 @@ const CitySelection: React.FC = () => {
     }
 
     return (
-        <div className="p-4 flex flex-row gap-4">
-            <div className="mb-4 flex flex-col">
-                <label className="ml-1 block text-gray-700 text-sm font-bold mb-2" htmlFor="province_select">
-                    省份
-                </label>
-                <Select onValueChange={handleProvinceChange}>
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="选择省份" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {_.map(provinceList, province => (
-                            <SelectItem value={province.id} key={`${province.id}_provincelist`}>
-                                {province.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="mb-4 flex flex-col">
-                <label className="ml-1 block text-gray-700 text-sm font-bold mb-2" htmlFor="city">
-                    城市
-                </label>
-                <Select onValueChange={handleCityChange} value={selectedCity?.id}>
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="选择城市" />
-                    </SelectTrigger>
-                    {_.isEmpty(selectedCityList) ? null : (
+        <div className="w-full mx-auto p-6 bg-white rounded-xl shadow-md mt-4">
+            <h2 className="text-2xl font-bold text-center mb-6">选择省市</h2>
+            <div className="flex flex-row justify-between items-center w-full">
+                <div className="mb-4 flex flex-col w-1/2 pr-4">
+                    <label className="ml-1 block text-gray-700 text-sm font-bold mb-2" htmlFor="province_select">
+                        省份
+                    </label>
+                    <Select onValueChange={handleProvinceChange}>
+                        <SelectTrigger className="">
+                            <SelectValue placeholder="选择省份" />
+                        </SelectTrigger>
                         <SelectContent>
-                            {_.map(selectedCityList, city => (
-                                <SelectItem value={city.id} key={`${city.id}_citylist`}>
-                                    {city.name}
+                            {_.map(provinceList, province => (
+                                <SelectItem value={province.id} key={`${province.id}_provincelist`}>
+                                    {province.name}
                                 </SelectItem>
                             ))}
                         </SelectContent>
-                    )}
-                </Select>
+                    </Select>
+                </div>
+                <div className="mb-4 flex flex-col w-1/2 pl-4">
+                    <label className="ml-1 block text-gray-700 text-sm font-bold mb-2" htmlFor="city">
+                        城市
+                    </label>
+                    <Select onValueChange={handleCityChange} value={selectedCity?.id}>
+                        <SelectTrigger className="">
+                            <SelectValue placeholder="选择城市" />
+                        </SelectTrigger>
+                        {_.isEmpty(selectedCityList) ? null : (
+                            <SelectContent>
+                                {_.map(selectedCityList, city => (
+                                    <SelectItem value={city.id} key={`${city.id}_citylist`}>
+                                        {city.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        )}
+                    </Select>
+                </div>
             </div>
         </div>
     )

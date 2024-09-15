@@ -11,12 +11,12 @@ const Configuration: React.FC = () => {
         updateConfig('city', '北京')
     }, [updateConfig])
     return (
-        <div>
+        <div className="w-full h-screen flex flex-col justify-center items-center p-6">
             <PhoneSelection />
             <CitySelection />
-            <div className="mt-4">
+            <div className="mt-6 w-full flex justify-center px-4">
                 <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    className="bg-blue-500 w-full hover:bg-blue-700 text-white font-bold py-2 px-4 min-h-[44px] rounded-lg"
                     onClick={handleConfirm}
                 >
                     确认
