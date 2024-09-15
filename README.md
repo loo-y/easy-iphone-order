@@ -2,6 +2,9 @@
 
 这是一个基于Electron和Puppeteer的自动化抢购工具,用于在苹果官网抢购iPhone等产品。
 
+<img width="612" alt="SCR-20240915-sknf" src="https://github.com/user-attachments/assets/251adeff-55c4-461e-b6e3-2ea1c32c974f">
+
+
 ## ~~主要功能~~ (目标)
 
 - 自动登录苹果官网账号
