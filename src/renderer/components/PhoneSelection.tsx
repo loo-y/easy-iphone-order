@@ -139,7 +139,7 @@ const PhoneSelection: React.FC = () => {
                 <h3 className="text-lg font-semibold mb-2">您的选择</h3>
                 {!!selectedModel ? (
                     <>
-                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                        <div className="grid grid-cols-1 grid-rows-4 gap-2 [@media(min-width:600px)]:grid-rows-2 [@media(min-width:600px)]:grid-cols-2">
                             <p>
                                 <strong>型号：</strong>
                                 {selectediPhoneType}

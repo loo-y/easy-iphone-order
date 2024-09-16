@@ -3,13 +3,13 @@
 import _ from 'lodash'
 import apiServices from './apiServices'
 import fileServices from './fileServices'
-import trayServices from './trayServices'
 import orderServices from './orderServices'
+import systemServices from './systemServices'
 import { iPhoneModels } from '../shared/constants'
 
 export default function setupServices() {
+    systemServices()
     fileServices()
-    trayServices()
     apiServices()
     orderServices(
         _.find(iPhoneModels.iPhone16ProMax, item => item.color.value === 'black' && item.capacity === '512GB').model

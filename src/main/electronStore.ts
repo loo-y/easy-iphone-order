@@ -12,5 +12,5 @@ export const saveConfig = (key: string, value: ConfigValue) => {
 
 export const getConfig = (key: string) => {
     // @ts-ignore
-    return configStore.get(key)
+    return configStore.get(key) || {}
 }

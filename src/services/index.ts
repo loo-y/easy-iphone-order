@@ -27,4 +27,7 @@ export const electronServices = {
     saveConfig: async ({ key, value }: { key: string; value: ConfigValue }): Promise<any> => {
         return await window.electronAPI.saveConfig({ key, value })
     },
+    toggleAlwaysOnTop: async (): Promise<boolean> => {
+        return await window.electronAPI.toggleAlwaysOnTop()
+    },
 }

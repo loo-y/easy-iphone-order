@@ -8,14 +8,24 @@ interface ElectronAPI {
     getCityList: ({ provinceId }: { provinceId: string }) => Promise<any>
     getConfig: ({ key }: { key: string }) => Promise<any>
     saveConfig: ({ key, value }: { key: string; value: ConfigValue }) => Promise<any>
+    toggleAlwaysOnTop: () => Promise<boolean>
 }
 
 export type ConfigValue = Record<string, any> | string | number | boolean
+
+export enum PageType {
+    Configuration = `configuration`,
+    StoreStockList = `storeStockList`,
+}
 
 export interface PickupConfig {
     province: string
     city: string
     iPhoneModel: string
+}
+
+export interface SystemConfig {
+    isAlwaysOnTop: boolean
 }
 
 export interface OrderServicesInjects {

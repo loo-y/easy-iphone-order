@@ -3,6 +3,10 @@ export const puppeteerOptions = {
     userAgent: browserUserAgent,
 }
 
+export const configKeys = {
+    system: `system`,
+    pickup: `pickup`,
+}
 export const iPhoneModels = {
     iPhone16Pro: [
         { color: { value: 'black', text: '黑色钛金属' }, capacity: '128GB', model: 'MYLN3CH/A' },

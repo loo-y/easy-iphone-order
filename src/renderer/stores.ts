@@ -1,11 +1,13 @@
 import { createStore } from 'zustand/vanilla'
 import _ from 'lodash'
 import { electronServices } from '../services'
-import { ConfigValue, PickupConfig } from '../shared/types'
+import { ConfigValue, PickupConfig, PageType } from '../shared/types'
 type MainState = {
     isloading?: boolean
     count: number
     pickupConfig?: PickupConfig
+    pageTitle?: string
+    currentPage?: PageType
 }
 
 type MainActions = {
@@ -15,6 +17,8 @@ type MainActions = {
     updatePickupConfig: (key: string, value: ConfigValue) => void
     getPickupConfigFromStore: () => void
     savePickupConfigToStore: () => void
+    updatePageTitle: (title: string) => void
+    updateCurrentPage: (page: PageType) => void
 }
 
 export type MainStore = MainState & MainActions
@@ -62,6 +66,20 @@ export const createMainStore = (initState: MainState = defaultInitState) => {
                 return set(state => {
                     const { pickupConfig } = state
                     return { pickupConfig: { ...pickupConfig, [key]: value } }
+                })
+            },
+            updatePageTitle: (title: string) => {
+                return set(state => {
+                    return {
+                        pageTitle: title || '',
+                    }
+                })
+            },
+            updateCurrentPage: (page: PageType) => {
+                return set(state => {
+                    return {
+                        currentPage: page,
+                    }
                 })
             },
         }

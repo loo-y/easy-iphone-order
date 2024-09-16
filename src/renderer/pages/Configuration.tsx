@@ -3,9 +3,11 @@ import React, { useCallback, useEffect } from 'react'
 import { MainStoreProvider, useMainStore } from '../providers'
 import PhoneSelection from '../components/PhoneSelection'
 import CitySelection from '../components/CitySelection'
+import { PageType } from '../../shared/types'
 
 const Configuration: React.FC = () => {
-    const { savePickupConfigToStore, getPickupConfigFromStore, pickupConfig } = useMainStore(state => state)
+    const { savePickupConfigToStore, getPickupConfigFromStore, pickupConfig, updatePageTitle, updateCurrentPage } =
+        useMainStore(state => state)
     const handleConfirm = useCallback(() => {
         const { province, city, iPhoneModel } = pickupConfig || {}
         if (!province || !city || !iPhoneModel) {
@@ -13,19 +15,21 @@ const Configuration: React.FC = () => {
         }
         savePickupConfigToStore()
         getPickupConfigFromStore()
-    }, [savePickupConfigToStore])
+        updateCurrentPage(PageType.StoreStockList)
+    }, [savePickupConfigToStore, pickupConfig])
 
     const handleCancel = useCallback(() => {
         getPickupConfigFromStore()
     }, [getPickupConfigFromStore])
 
     useEffect(() => {
+        updatePageTitle(`配置`)
         console.log(`getPickupConfigFromStore`)
         getPickupConfigFromStore()
     }, [])
 
     return (
-        <div className="w-full h-screen flex flex-col justify-center items-center p-6 pt-0">
+        <div className="w-full flex flex-col justify-center items-start p-6">
             <CitySelection />
             <PhoneSelection />
 
