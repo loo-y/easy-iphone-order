@@ -6,10 +6,10 @@ import { electronServices } from '../../services'
 import _ from 'lodash'
 import { configKeys, iPhoneModels } from '../../shared/constants'
 import { PickupConfig } from '../../shared/types'
+import { MapPin, Phone, Hash, Package, XCircle } from 'lucide-react'
 
 const StoreStockList: React.FC = () => {
     const { pickupConfig, updatePageTitle } = useMainStore(state => state)
-    const { province, city, iPhoneModel } = pickupConfig || {}
     const [stockData, setStockData] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false)
@@ -19,9 +19,9 @@ const StoreStockList: React.FC = () => {
         try {
             setIsRefreshing(true)
             const pickupConfig: PickupConfig = await electronServices.getConfig({ key: configKeys.pickup })
-            const { iPhoneModel, city, province } = pickupConfig || {}
+            const { iPhoneModel, city, state, district } = pickupConfig || {}
             // const storeNumber = 'R390'
-            const location = `${province} ${city}`
+            const location = `${state} ${city} ${district}`
             const data = await electronServices.getiPhoneStock({ iPhoneModel: iPhoneModel, location })
             console.log(`data---<`, data)
             setStockData(data)
@@ -52,39 +52,99 @@ const StoreStockList: React.FC = () => {
     }
 
     return (
-        <div className="w-full">
+        <div className="w-full py-10">
             {isRefreshing && (
                 <div className="fixed text-base font-normal top-16 left-0 z-10 w-full flex justify-center items-center bg-yellow-100 border-b-2 border-yellow-300 border-solid">
                     <div>{`正在刷新...  下次刷新:${refreshIntervalSeconds}秒后`}</div>
                 </div>
             )}
-            <ul className="pt-3 pb-10 z-0 px-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6 pb-10 z-0">
                 {_.map(stockData, (store, index) => {
-                    const { storeName, storeNumber, city, phoneNumber, pickupSearchQuote, pickupAvailable } =
-                        store || {}
+                    const {
+                        storeName,
+                        storeNumber,
+                        city,
+                        state,
+                        storeDistanceWithUnit,
+                        phoneNumber,
+                        pickupSearchQuote,
+                        pickupAvailable,
+                    } = store || {}
 
                     return (
-                        <li
-                            key={`store-stock-${index}`}
-                            className="shadow-md border-l border-t rounded-lg p-4 my-5 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center"
-                        >
-                            <div className="flex flex-col">
-                                <h3 className="text-lg font-semibold">{storeName}</h3>
-                                <p className="text-sm text-gray-600">{city}</p>
-                                <p className="text-sm text-gray-600">{storeNumber}</p>
-                                <p className="text-sm text-gray-600">{phoneNumber}</p>
-                            </div>
-                            <div className="mt-2 md:mt-0">
+                        <div key={`store-stock-${index}`} className="">
+                            {/* <div className="flex flex-col"> */}
+                            <StoreCard store={store} />
+                            {/* <h3 className="text-lg font-semibold">{`Apple ${storeName}`}</h3>
+                                <p className="text-sm text-gray-600">{`${city} ${state || ''}`}</p>
+                                <p className="text-sm text-gray-600">{`${storeDistanceWithUnit || ''}`}</p>
+                                <p className="text-sm text-gray-600">{`门店编号：${storeNumber}`}</p>
+                                <p className="text-sm text-gray-600">{phoneNumber}</p> */}
+                            {/* </div> */}
+                            {/* <div className="mt-2 md:mt-0">
                                 <p className={`text-sm ${pickupAvailable ? 'text-green-500' : 'text-red-500'}`}>
                                     {pickupSearchQuote}
                                 </p>
-                            </div>
-                        </li>
+                            </div> */}
+                        </div>
                     )
                 })}
-            </ul>
+            </div>
         </div>
     )
 }
 
 export default StoreStockList
+
+const StoreCard = ({ store }: { store: Record<string, string> }) => {
+    const {
+        storeName,
+        city = '',
+        state = '',
+        phoneNumber = '',
+        storeDistanceWithUnit = '',
+        storeNumber = '',
+        pickupSearchQuote = '',
+        pickupAvailable = false,
+    } = store || {}
+    return (
+        <div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
+            <div className="p-4 flex-grow">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">{storeName}</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                    {city}
+                    {state ? `, ${state}` : ''}
+                </p>
+                <div className="space-y-2 text-sm">
+                    <div className="flex items-center text-gray-700">
+                        <MapPin size={16} className="mr-2 flex-shrink-0" />
+                        <span>{storeDistanceWithUnit}</span>
+                    </div>
+                    <div className="flex items-center text-gray-700">
+                        <Hash size={16} className="mr-2 flex-shrink-0" />
+                        <span>门店编号: {storeNumber}</span>
+                    </div>
+                    <div className="flex items-center text-gray-700">
+                        <Phone size={16} className="mr-2 flex-shrink-0" />
+                        <span>{phoneNumber}</span>
+                    </div>
+                </div>
+            </div>
+            <div className={`p-4 ${pickupAvailable ? 'bg-green-50' : 'bg-red-50'}`}>
+                <div className="flex items-center justify-center">
+                    {pickupAvailable ? (
+                        <>
+                            <Package size={20} className="text-green-500 mr-2" />
+                            <p className="text-sm font-medium text-gray-800">{pickupSearchQuote}</p>
+                        </>
+                    ) : (
+                        <>
+                            <XCircle size={20} className="text-red-500 mr-2" />
+                            <p className="text-sm font-medium text-gray-800">{pickupSearchQuote || `暂无库存`}</p>
+                        </>
+                    )}
+                </div>
+            </div>
+        </div>
+    )
+}

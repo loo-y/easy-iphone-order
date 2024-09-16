@@ -3,79 +3,118 @@ import React, { useEffect, useRef, useState } from 'react'
 import _ from 'lodash'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { useMainStore } from '../providers'
+import { AddressType } from '../../shared/types'
 
 const CitySelection: React.FC = () => {
     const { pickupConfig, updatePickupConfig } = useMainStore(state => state)
-    const [provinceList, setProvinceList] = useState<{ name: string; id: string }[]>([])
-    const [selectedProvince, setSelectedProvince] = useState<{ name: string; id: string } | null>()
-    const [selectedCityList, setSelectedCityList] = useState<{ name: string; id: string }[] | null>([])
-    const [selectedCity, setSelectedCity] = useState<{ name: string; id: string } | null>()
-    console.log(`selectedProvince`, selectedProvince?.name, selectedCityList)
+    const [stateList, setStateList] = useState<AddressType[]>([])
+    const [selectedState, setSelectedState] = useState<AddressType | null>()
+    const [cityList, setCityList] = useState<AddressType[]>([])
+    const [selectedCity, setSelectedCity] = useState<AddressType | null>()
+    const [districtList, setDistrictList] = useState<AddressType[]>([])
+    const [selectedDistrict, setSelectedDistrict] = useState<AddressType | null>()
+    console.log(`selectedState`, selectedState?.label, cityList)
 
     useEffect(() => {
         console.log(`pickupConfig`, pickupConfig)
-        const { province: provinceNameFromStore } = pickupConfig || {}
-        window.electronAPI.getProvinces().then(provinces => {
-            setProvinceList(provinces)
-            const selectedProvince = _.find(provinces, province => province.name === provinceNameFromStore)
-            console.log(`selectedProvince`, selectedProvince)
-            setSelectedProvince(selectedProvince)
+        const { state: stateNameFromStore } = pickupConfig || {}
+        window.electronAPI.getStates().then(states => {
+            setStateList(states)
+            const selectedState = _.find(states, state => state.value === stateNameFromStore)
+            console.log(`selectedState`, selectedState)
+            setSelectedState(selectedState)
         })
-        // if (selectedProvince?.id) {
-        //     window.electronAPI.getCityList({ provinceId: selectedProvince.id }).then(cityList => {
-        //         setSelectedCityList(cityList)
-        //     })
-        // }
     }, [pickupConfig])
 
     useEffect(() => {
-        console.log(`selectedProvince`, selectedProvince)
+        console.log(`selectedState`, selectedState)
         const { city: cityNameFromStore } = pickupConfig || {}
-        if (selectedProvince?.id) {
-            window.electronAPI.getCityList({ provinceId: selectedProvince.id }).then(cityList => {
-                setSelectedCityList(cityList)
-                const selectedCity = _.find(cityList, city => city.name === cityNameFromStore)
+        if (selectedState?.value) {
+            window.electronAPI.getCityList({ state: selectedState.value }).then(cityList => {
+                setCityList(cityList)
+                const selectedCity = _.find(cityList, city => city.value === cityNameFromStore)
                 console.log(`selectedCity`, selectedCity)
                 if (selectedCity) {
                     setSelectedCity(selectedCity)
                 } else if (cityList?.length == 1) {
                     setSelectedCity(cityList[0])
-                    updatePickupConfig('city', cityList[0].name)
+                    updatePickupConfig('city', cityList[0].value)
                 } else {
                     setSelectedCity(null)
                 }
             })
+        } else {
+            setCityList([])
+            setSelectedCity(null)
         }
-    }, [selectedProvince])
+    }, [selectedState])
 
-    const handleProvinceChange = (provinceId: string) => {
-        // const provinceId = event.target.value
-        console.log(`provinceId`, provinceId)
-        const selectedProvince = _.find(provinceList, province => province.id === provinceId)
-        setSelectedProvince(selectedProvince)
-        window.electronAPI.getCityList({ provinceId: selectedProvince.id }).then(cityList => {
-            console.log(`cityList`, cityList)
-            setSelectedCityList(cityList)
-            updatePickupConfig('province', selectedProvince.name)
-            if (cityList?.length == 1) {
-                setSelectedCity(cityList[0])
-                updatePickupConfig('city', cityList[0].name)
-            } else {
-                setSelectedCity(null)
-                updatePickupConfig('city', null)
-            }
-        })
+    useEffect(() => {
+        console.log(`selectedCity`, selectedCity)
+        const { district: districtNameFromStore } = pickupConfig || {}
+        if (selectedState?.value && selectedCity?.value) {
+            window.electronAPI
+                .getDistrictList({ state: selectedState.value, city: selectedCity.value })
+                .then(districtList => {
+                    setDistrictList(districtList)
+                    const selectedDistrict = _.find(districtList, district => district.value === districtNameFromStore)
+                    console.log(`selectedDistrict`, selectedDistrict)
+                    if (selectedDistrict) {
+                        setSelectedDistrict(selectedDistrict)
+                    } else if (districtList?.length == 1) {
+                        setSelectedDistrict(districtList[0])
+                        updatePickupConfig('district', districtList[0].value)
+                    } else {
+                        setSelectedDistrict(null)
+                    }
+                })
+        } else {
+            setDistrictList([])
+            setSelectedDistrict(null)
+        }
+    }, [selectedCity])
+
+    const handleStateChange = (stateValue: string) => {
+        // const stateId = event.target.value
+        console.log(`stateValue`, stateValue)
+        const selectedState = _.find(stateList, state => state?.value == stateValue)
+        if (selectedState) {
+            setSelectedState(selectedState)
+            window.electronAPI.getCityList({ state: selectedState.value }).then(cityList => {
+                console.log(`cityList`, cityList)
+                setCityList(cityList)
+                updatePickupConfig('state', selectedState.value)
+                if (cityList?.length == 1) {
+                    setSelectedCity(cityList[0])
+                    updatePickupConfig('city', cityList[0].value)
+                } else {
+                    setSelectedCity(null)
+                    updatePickupConfig('city', null)
+                }
+            })
+        }
     }
 
-    const handleCityChange = selectedCityId => {
+    const handleCityChange = selectedCityValue => {
         // const selectedCityId = event.target.value
-        const selectedCity = _.find(selectedCityList, city => city.id === selectedCityId)
+        const selectedCity = _.find(cityList, city => city?.value == selectedCityValue)
         if (selectedCity) {
             setSelectedCity(selectedCity)
-            updatePickupConfig('city', selectedCity.name)
+            updatePickupConfig('city', selectedCity.value)
         } else {
             setSelectedCity(null)
             updatePickupConfig('city', null)
+        }
+    }
+
+    const handleDistrictChange = selectedDistrictValue => {
+        const selectedDistrict = _.find(districtList, district => district?.value == selectedDistrictValue)
+        if (selectedDistrict) {
+            setSelectedDistrict(selectedDistrict)
+            updatePickupConfig('district', selectedDistrict.value)
+        } else {
+            setSelectedDistrict(null)
+            updatePickupConfig('district', null)
         }
     }
 
@@ -83,36 +122,55 @@ const CitySelection: React.FC = () => {
         <div className="w-full mx-auto p-6 bg-white rounded-xl shadow-md my-4">
             <h2 className="text-2xl font-bold text-center mb-6">选择省市</h2>
             <div className="flex flex-row justify-between items-center w-full">
-                <div className="mb-4 flex flex-col w-1/2 pr-4">
-                    <label className="ml-1 block text-gray-700 text-sm font-bold mb-2" htmlFor="province_select">
+                <div className="mb-4 flex flex-col w-1/3 pr-4">
+                    <label className="ml-1 block text-gray-700 text-sm font-bold mb-2" htmlFor="state_select">
                         省份
                     </label>
-                    <Select onValueChange={handleProvinceChange} value={selectedProvince?.id}>
+                    <Select onValueChange={handleStateChange} value={selectedState?.value}>
                         <SelectTrigger className="">
                             <SelectValue placeholder="选择省份" />
                         </SelectTrigger>
                         <SelectContent>
-                            {_.map(provinceList, province => (
-                                <SelectItem value={province.id} key={`${province.id}_provincelist`}>
-                                    {province.name}
+                            {_.map(stateList, state => (
+                                <SelectItem value={state.value} key={`${state.value}_statelist`}>
+                                    {state.label}
                                 </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="mb-4 flex flex-col w-1/2 pl-4">
+                <div className="mb-4 flex flex-col w-1/3 pl-4">
                     <label className="ml-1 block text-gray-700 text-sm font-bold mb-2" htmlFor="city">
                         城市
                     </label>
-                    <Select onValueChange={handleCityChange} value={selectedCity?.id}>
+                    <Select onValueChange={handleCityChange} value={selectedCity?.value}>
                         <SelectTrigger className="">
                             <SelectValue placeholder="选择城市" />
                         </SelectTrigger>
-                        {_.isEmpty(selectedCityList) ? null : (
+                        {_.isEmpty(cityList) ? null : (
                             <SelectContent>
-                                {_.map(selectedCityList, city => (
-                                    <SelectItem value={city.id} key={`${city.id}_citylist`}>
-                                        {city.name}
+                                {_.map(cityList, city => (
+                                    <SelectItem value={city.value} key={`${city.value}_citylist`}>
+                                        {city.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        )}
+                    </Select>
+                </div>
+                <div className="mb-4 flex flex-col w-1/3 pl-4">
+                    <label className="ml-1 block text-gray-700 text-sm font-bold mb-2" htmlFor="city">
+                        区域
+                    </label>
+                    <Select onValueChange={handleDistrictChange} value={selectedDistrict?.value || ''}>
+                        <SelectTrigger className="">
+                            <SelectValue placeholder="选择区域" />
+                        </SelectTrigger>
+                        {_.isEmpty(districtList) ? null : (
+                            <SelectContent>
+                                {_.map(districtList, district => (
+                                    <SelectItem value={district.value} key={`${district.value}_districtlist`}>
+                                        {district.label}
                                     </SelectItem>
                                 ))}
                             </SelectContent>

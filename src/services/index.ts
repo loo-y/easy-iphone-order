@@ -1,4 +1,4 @@
-import { ConfigValue } from '../shared/types'
+import { ConfigValue, AddressType } from '../shared/types'
 export const electronServices = {
     orderiPhone: () => {
         window.electronAPI.orderiPhone()
@@ -23,11 +23,14 @@ export const electronServices = {
     writeFile: async (filePath: string, content: string): Promise<boolean> => {
         return await window.electronAPI.writeFile(filePath, content)
     },
-    getProvinces: async (): Promise<any> => {
-        return await window.electronAPI.getProvinces()
+    getStates: async (): Promise<AddressType[]> => {
+        return await window.electronAPI.getStates()
     },
-    getCityList: async ({ provinceId }: { provinceId: string }): Promise<any> => {
-        return await window.electronAPI.getCityList({ provinceId })
+    getCityList: async ({ state }: { state: string }): Promise<AddressType[]> => {
+        return await window.electronAPI.getCityList({ state })
+    },
+    getDistrictList: async ({ state, city }: { state: string; city: string }): Promise<AddressType[]> => {
+        return await window.electronAPI.getDistrictList({ state, city })
     },
     getConfig: ({ key }: { key: string }): any => {
         return window.electronAPI.getConfig({ key })

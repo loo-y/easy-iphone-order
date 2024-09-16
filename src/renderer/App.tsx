@@ -12,8 +12,8 @@ const Main = () => {
     const [isConfiged, setIsConfiged] = useState(true)
     useEffect(() => {
         electronServices.getConfig({ key: configKeys.pickup }).then((pickupConfig: PickupConfig) => {
-            const { iPhoneModel, province, city } = pickupConfig || {}
-            setIsConfiged(!!(iPhoneModel && province && city))
+            const { iPhoneModel, state, city, district } = pickupConfig || {}
+            setIsConfiged(!!(iPhoneModel && state && city && district))
         })
     })
     return (

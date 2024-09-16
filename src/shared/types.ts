@@ -12,8 +12,9 @@ interface ElectronAPI {
     minimizeToTray: () => void
     readFile: (filePath: string) => Promise<string>
     writeFile: (filePath: string, content: string) => Promise<boolean>
-    getProvinces: () => Promise<any>
-    getCityList: ({ provinceId }: { provinceId: string }) => Promise<any>
+    getStates: () => Promise<AddressType[]>
+    getCityList: ({ state }: { state: string }) => Promise<AddressType[]>
+    getDistrictList: ({ state, city }: { state: string; city: string }) => Promise<AddressType[]>
     getConfig: ({ key }: { key: string }) => Promise<any>
     saveConfig: ({ key, value }: { key: string; value: ConfigValue }) => Promise<any>
     toggleAlwaysOnTop: () => Promise<boolean>
@@ -21,14 +22,19 @@ interface ElectronAPI {
 
 export type ConfigValue = Record<string, any> | string | number | boolean
 
+export type AddressType = {
+    label: string
+    value: string
+}
 export enum PageType {
     Configuration = `configuration`,
     StoreStockList = `storeStockList`,
 }
 
 export interface PickupConfig {
-    province: string
+    state: string
     city: string
+    district: string
     iPhoneModel: string
 }
 

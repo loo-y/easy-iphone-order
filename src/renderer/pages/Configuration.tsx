@@ -9,8 +9,8 @@ const Configuration: React.FC = () => {
     const { savePickupConfigToStore, getPickupConfigFromStore, pickupConfig, updatePageTitle, updateCurrentPage } =
         useMainStore(state => state)
     const handleConfirm = useCallback(() => {
-        const { province, city, iPhoneModel } = pickupConfig || {}
-        if (!province || !city || !iPhoneModel) {
+        const { state, city, iPhoneModel } = pickupConfig || {}
+        if (!state || !city || !iPhoneModel) {
             return
         }
         savePickupConfigToStore()

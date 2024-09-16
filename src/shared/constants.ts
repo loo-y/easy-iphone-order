@@ -106,6 +106,20 @@ export const appleAPIUrl = {
         }
         return url
     },
+    addressLookup: (state?: string, city?: string, district?: string) => {
+        let url = `https://www.apple.com.cn/shop/address-lookup`
+        if (state) {
+            url = `${url}?state=${encodeURIComponent(state)}`
+            if (city) {
+                url = `${url}&city=${encodeURIComponent(city)}`
+                if (district) {
+                    url = `${url}&district=${encodeURIComponent(district)}`
+                }
+            }
+        }
+
+        return url
+    },
 }
 
 export const commonHeaders = {
