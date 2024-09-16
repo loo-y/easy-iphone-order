@@ -1,7 +1,6 @@
 import { ipcMain } from 'electron'
 import _ from 'lodash'
-import { appleAPIUrl, commonHeaders } from '../shared/constants'
-import CityData from '../resources/location/city.json'
+import { appleAPIUrl, commonHeaders, configKeys } from '../shared/constants'
 import { getConfig, saveConfig } from '../main/electronStore'
 import { ConfigValue } from '../shared/types'
 
@@ -33,6 +32,7 @@ export default function apiServices() {
                         } = store
                         const partAvailability = partsAvailability?.[iPhoneModel] || {}
                         const { pickupDisplay, pickupSearchQuote, buyability } = partAvailability
+                        console.log(`original stores, partAvailability`, partAvailability, buyability)
                         return {
                             storeName,
                             storeNumber,
@@ -41,13 +41,13 @@ export default function apiServices() {
                             storeDistanceWithUnit,
                             phoneNumber,
                             pickupSearchQuote,
-                            pickupAvailable: buyability?.isBuyable, // String(pickupDisplay || '').toLowerCase() == `available`,
+                            pickupAvailable:
+                                buyability?.isBuyable && String(pickupDisplay || '').toLowerCase() == `available`, // String(pickupDisplay || '').toLowerCase() == `available`,
                         }
                     })
                     // pickupAvailable 为true的排前面
                     resultList = _.sortBy(resultList, store => !store.pickupAvailable)
 
-                    console.log(`resultList---<`, resultList)
                     return resultList
                 }
                 return []
@@ -59,6 +59,8 @@ export default function apiServices() {
     )
 
     ipcMain.handle('getStates', async event => {
+        const statesInLocal = getConfig(configKeys.addressStates) || {}
+        if (!_.isEmpty(statesInLocal)) return statesInLocal
         const url = appleAPIUrl.addressLookup()
         console.log(`url--->`, url)
         const response = await fetch(url, {
@@ -67,6 +69,7 @@ export default function apiServices() {
         })
         const data = await response.json()
         if (!_.isEmpty(data?.body?.state?.data)) {
+            saveConfig(configKeys.addressStates, data.body.state.data)
             return data.body.state.data
         }
         try {
@@ -77,6 +80,10 @@ export default function apiServices() {
     })
 
     ipcMain.handle('getCityList', async (event, { state }: { state: string }) => {
+        const citiesInLocal = getConfig(configKeys.addressCities) || {}
+        if (!_.isEmpty(citiesInLocal?.[state])) {
+            return citiesInLocal[state]
+        }
         console.log(`getCityList url--->`, state)
         const url = appleAPIUrl.addressLookup(state)
 
@@ -88,9 +95,19 @@ export default function apiServices() {
             const data = await response.json()
             if (data?.body?.city) {
                 if (typeof data.body.city == `string`) {
-                    return [{ label: data.body.city, value: data.body.city }]
+                    const cityList = [{ label: data.body.city, value: data.body.city }]
+                    saveConfig(configKeys.addressCities, {
+                        ...citiesInLocal,
+                        [state]: cityList,
+                    })
+                    return cityList
                 } else if (!_.isEmpty(data.body.city?.data)) {
-                    return data.body.city.data
+                    const cityList = data.body.city.data
+                    saveConfig(configKeys.addressCities, {
+                        ...citiesInLocal,
+                        [state]: cityList,
+                    })
+                    return cityList
                 }
             }
         } catch (e) {

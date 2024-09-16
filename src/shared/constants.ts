@@ -6,6 +6,9 @@ export const puppeteerOptions = {
 export const configKeys = {
     system: `system`,
     pickup: `pickup`,
+    addressStates: `addressStates`,
+    addressCities: `addressCities`,
+    addressDistricts: `addressDistricts`,
 }
 export const iPhoneModels = {
     iPhone16Pro: [
