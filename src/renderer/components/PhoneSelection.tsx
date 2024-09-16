@@ -3,21 +3,38 @@ import React, { useEffect, useState } from 'react'
 import _ from 'lodash'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { iPhoneModels } from '../../shared/constants'
+import { useMainStore } from '../providers'
 
 const PhoneSelection: React.FC = () => {
-    const [selectedModel, setSelectedModel] = useState<Record<string, any> | null>()
+    const { pickupConfig, updatePickupConfig } = useMainStore(state => state)
+
+    const [selectedModel, setSelectedModel] = useState<string | null>()
     const [selectedColor, setSelectedColor] = useState<{ value: string; text: string } | null>()
     const [selectedCapacity, setSelectedCapacity] = useState<string | null>()
-    const [selectediPhoneType, setSelectediPhoneType] = useState<'iPhone16Pro' | 'iPhone16ProMax' | null>()
+    const [selectediPhoneType, setSelectediPhoneType] = useState<
+        'iPhone16Pro' | 'iPhone16ProMax' | 'iPhone15Pro' | 'iPhone15ProMax' | null
+    >()
     const iPhoneTypes = _.keys(iPhoneModels)
     const [colorList, setColorList] = useState<{ value: string; text: string }[]>([])
     const [capacityList, setCapacityList] = useState<string[]>([])
     useEffect(() => {
-        // set default iPhone
-        if (!selectediPhoneType) {
+        console.log(`pickupConfig`, pickupConfig)
+        const { iPhoneModel } = pickupConfig || {}
+        if (iPhoneModel) {
+            const iPhoneType = _.findKey(iPhoneModels, item => {
+                return _.some(item, iPhoneItem => iPhoneItem.model === iPhoneModel)
+            }) as 'iPhone16Pro' | 'iPhone16ProMax' | 'iPhone15Pro' | 'iPhone15ProMax' | null
+
+            const theiPhoneModelInfo = _.find(_.flatten(_.values(iPhoneModels)), item => item.model === iPhoneModel)
+            handleSelectiPhoneType(iPhoneType)
+            setSelectediPhoneType(iPhoneType)
+            setSelectedModel(iPhoneModel)
+            setSelectedColor(theiPhoneModelInfo.color)
+            setSelectedCapacity(theiPhoneModelInfo.capacity)
+        } else if (!selectediPhoneType) {
             handleSelectiPhoneType('iPhone16Pro')
         }
-    }, [])
+    }, [pickupConfig])
 
     useEffect(() => {
         const theiPhoneModelInfo = iPhoneModels?.[selectediPhoneType]
@@ -25,7 +42,12 @@ const PhoneSelection: React.FC = () => {
             return item?.color?.value === selectedColor?.value && item?.capacity === selectedCapacity
         })
         if (!_.isEmpty(selectediPhoneModel)) {
-            setSelectedModel(selectediPhoneModel)
+            setSelectedModel(selectediPhoneModel.model)
+            console.log(`selectediPhoneModel`, selectediPhoneModel)
+            updatePickupConfig('iPhoneModel', selectediPhoneModel.model)
+        } else {
+            setSelectedModel(null)
+            updatePickupConfig('iPhoneModel', null)
         }
     }, [selectedColor, selectedCapacity, selectediPhoneType])
 
@@ -65,7 +87,7 @@ const PhoneSelection: React.FC = () => {
     }
 
     return (
-        <div className="mx-auto p-6 bg-white rounded-xl shadow-md w-full">
+        <div className="mx-auto p-6 bg-white rounded-xl shadow-md w-full my-4">
             <h2 className="text-2xl font-bold text-center mb-6">选择 iPhone</h2>
             <Select onValueChange={handleSelectiPhoneType} value={selectediPhoneType}>
                 <SelectTrigger className="w-full">
@@ -115,7 +137,7 @@ const PhoneSelection: React.FC = () => {
 
             <div className="mt-6 p-4 bg-gray-100 rounded-lg min-h-[120px]">
                 <h3 className="text-lg font-semibold mb-2">您的选择</h3>
-                {!_.isEmpty(selectedModel) ? (
+                {!!selectedModel ? (
                     <>
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                             <p>
@@ -124,15 +146,15 @@ const PhoneSelection: React.FC = () => {
                             </p>
                             <p>
                                 <strong>颜色：</strong>
-                                {selectedModel.color?.text || ''}
+                                {selectedColor?.text || ''}
                             </p>
                             <p>
                                 <strong>容量：</strong>
-                                {selectedModel.capacity}
+                                {selectedCapacity}
                             </p>
                             <p>
                                 <strong>Model：</strong>
-                                {selectedModel.model}
+                                {selectedModel}
                             </p>
                         </div>
                     </>

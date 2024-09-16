@@ -1,17 +1,20 @@
 import { createStore } from 'zustand/vanilla'
 import _ from 'lodash'
-// import { savePickupConfig, getPickupConfig } from '../main/electronStore'
+import { electronServices } from '../services'
+import { ConfigValue, PickupConfig } from '../shared/types'
 type MainState = {
     isloading?: boolean
     count: number
+    pickupConfig?: PickupConfig
 }
 
 type MainActions = {
     updateIsLoading: (loading: boolean) => void
     increment: () => void
     decrement: () => void
-    updateConfig: (key: string, value: any) => void
-    getConfig: (key: string) => any
+    updatePickupConfig: (key: string, value: ConfigValue) => void
+    getPickupConfigFromStore: () => void
+    savePickupConfigToStore: () => void
 }
 
 export type MainStore = MainState & MainActions
@@ -42,11 +45,24 @@ export const createMainStore = (initState: MainState = defaultInitState) => {
             decrement: () => {
                 return set(state => ({ count: state.count - 1 }))
             },
-            getConfig: (key: string) => {
-                // return getPickupConfig(key)
+            getPickupConfigFromStore: async () => {
+                const pickupConfig = (await electronServices.getConfig({ key: 'pickup' })) as PickupConfig
+                console.log(`getPickupConfigFromStore pickupConfig`, pickupConfig)
+                return set(state => ({ pickupConfig }))
             },
-            updateConfig: (key: string, value: any) => {
-                // return savePickupConfig(key, value)
+            savePickupConfigToStore: () => {
+                return set(state => {
+                    const { pickupConfig } = state
+                    console.log(`savePickupConfigToStore pickupConfig`, pickupConfig)
+                    electronServices.saveConfig({ key: 'pickup', value: _.isEmpty(pickupConfig) ? {} : pickupConfig })
+                    return { pickupConfig }
+                })
+            },
+            updatePickupConfig: (key: string, value: ConfigValue) => {
+                return set(state => {
+                    const { pickupConfig } = state
+                    return { pickupConfig: { ...pickupConfig, [key]: value } }
+                })
             },
         }
     })

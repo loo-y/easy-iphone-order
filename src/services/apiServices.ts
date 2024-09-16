@@ -3,6 +3,8 @@ import _ from 'lodash'
 import { appleAPIUrl, commonHeaders } from '../shared/constants'
 import CityData from '../resources/location/city.json'
 import ProvinceData from '../resources/location/province.json'
+import { getConfig, saveConfig } from '../main/electronStore'
+import { ConfigValue } from '../shared/types'
 
 export default function apiServices() {
     ipcMain.handle(
@@ -48,5 +50,12 @@ export default function apiServices() {
         const cityList = CityData?.[provinceId] || []
         console.log(`CityData`, CityData?.[provinceId])
         return cityList
+    })
+
+    ipcMain.handle('getConfig', async (event, { key }: { key: string }) => {
+        return getConfig(key)
+    })
+    ipcMain.handle('saveConfig', async (event, { key, value }: { key: string; value: ConfigValue }) => {
+        return saveConfig(key, value)
     })
 }

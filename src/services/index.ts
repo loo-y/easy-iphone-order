@@ -1,3 +1,4 @@
+import { ConfigValue } from '../shared/types'
 export const electronServices = {
     orderiPhone: () => {
         window.electronAPI.orderiPhone()
@@ -19,5 +20,11 @@ export const electronServices = {
     },
     getCityList: async ({ provinceId }: { provinceId: string }): Promise<any> => {
         return await window.electronAPI.getCityList({ provinceId })
+    },
+    getConfig: ({ key }: { key: string }): any => {
+        return window.electronAPI.getConfig({ key })
+    },
+    saveConfig: async ({ key, value }: { key: string; value: ConfigValue }): Promise<any> => {
+        return await window.electronAPI.saveConfig({ key, value })
     },
 }
