@@ -25,10 +25,10 @@ const createWindow = (): void => {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         height: 1200,
-        minHeight: 1000,
+        minHeight: 800,
         width: 500,
         minWidth: 500,
-        alwaysOnTop: systemConfig.isAlwaysOnTop ?? true,
+        alwaysOnTop: systemConfig.isAlwaysOnTop ?? false,
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
             nodeIntegration: true,
@@ -39,7 +39,7 @@ const createWindow = (): void => {
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 
     // 点击关闭时仅隐藏
     mainWindow.on('close', e => {

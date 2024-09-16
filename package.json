@@ -9,6 +9,8 @@
         "package": "electron-forge package",
         "build:orderServicesInjects": "webpack --config webpack.orderServicesInjects.config.js",
         "make": "electron-forge make",
+        "make:macx64":  "electron-forge make --arch=x64 --platform=darwin",
+        "make:windows": "electron-forge make --arch=x64 --platform=win32",
         "make:universal": "electron-forge make --arch=universal --platform=darwin",
         "make:macpackage": "electron-builder build --mac --arm64 --x64",
         "publish": "electron-forge publish",
