@@ -2,8 +2,10 @@
 
 这是一个基于Electron和Puppeteer的自动化工具, 用于监控苹果官网iPhone库存。
 
-<img width="612" alt="SCR-20240915-sknf" src="https://github.com/user-attachments/assets/251adeff-55c4-461e-b6e3-2ea1c32c974f">
+|<img width="612" alt="SCR-20240916-mnrv" src="https://github.com/user-attachments/assets/27594645-ab93-40ee-821b-84a3471e8111">|<img width="612" alt="SCR-20240916-mnmg" src="https://github.com/user-attachments/assets/b65f4e6b-b013-435c-9511-a7b263af680f">|
+|--|--|
 
+<br />
 
 ## ~~主要功能~~ (目标)
 
