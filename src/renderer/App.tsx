@@ -17,7 +17,7 @@ const Main = () => {
         })
     })
     return (
-        <div className="flex flex-col items-center justify-center w-screen overflow-y-scroll bg-gray-100">
+        <div className="flex flex-col items-center justify-center w-screen overflow-y-scroll bg-gray-100 pt-12">
             <TopBar />
             {!isConfiged || currentPage == PageType.Configuration ? <Configuration /> : <StoreStockList />}
         </div>

@@ -9,8 +9,12 @@ import { ConfigValue } from '../shared/types'
 export default function apiServices() {
     ipcMain.handle(
         'getiPhoneStock',
-        async (event, { iPhoneModel, storeNumber }: { iPhoneModel: string; storeNumber: string }) => {
-            const url = appleAPIUrl.checkStock(iPhoneModel, storeNumber)
+        async (
+            event,
+            { iPhoneModel, storeNumber, location }: { iPhoneModel: string; storeNumber?: string; location?: string }
+        ) => {
+            const url = appleAPIUrl.checkStock(iPhoneModel, storeNumber, location)
+            console.log(`url--->`, url)
             try {
                 const response = await fetch(url, {
                     headers: commonHeaders,

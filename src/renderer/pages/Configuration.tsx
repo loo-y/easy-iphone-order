@@ -20,6 +20,7 @@ const Configuration: React.FC = () => {
 
     const handleCancel = useCallback(() => {
         getPickupConfigFromStore()
+        updateCurrentPage(PageType.StoreStockList)
     }, [getPickupConfigFromStore])
 
     useEffect(() => {

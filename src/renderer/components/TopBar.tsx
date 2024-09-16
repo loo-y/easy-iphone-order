@@ -33,7 +33,7 @@ const TopBar = () => {
     }, [])
 
     return (
-        <div className="bg-white shadow-lg p-4 flex flex-row items-center w-full relative">
+        <div className="bg-white shadow-lg p-4 flex flex-row items-center w-full fixed top-0">
             <div className="flex-1 flex justify-center">
                 <div className="text-2xl font-bold">{pageTitle || ''}</div>
             </div>

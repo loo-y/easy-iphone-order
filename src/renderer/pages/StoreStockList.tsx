@@ -4,7 +4,8 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useMainStore } from '../providers'
 import { electronServices } from '../../services'
 import _ from 'lodash'
-import { iPhoneModels } from '../../shared/constants'
+import { configKeys, iPhoneModels } from '../../shared/constants'
+import { PickupConfig } from '../../shared/types'
 
 const StoreStockList: React.FC = () => {
     const { pickupConfig, updatePageTitle } = useMainStore(state => state)
@@ -17,9 +18,11 @@ const StoreStockList: React.FC = () => {
     const fetchStockData = useCallback(async () => {
         try {
             setIsRefreshing(true)
-            const iPhone16Model = iPhoneModels.iPhone16Pro[0].model
-            const storeNumber = 'R390'
-            const data = await electronServices.getiPhoneStock({ iPhoneModel: iPhone16Model, storeNumber })
+            const pickupConfig: PickupConfig = await electronServices.getConfig({ key: configKeys.pickup })
+            const { iPhoneModel, city, province } = pickupConfig || {}
+            // const storeNumber = 'R390'
+            const location = `${province} ${city}`
+            const data = await electronServices.getiPhoneStock({ iPhoneModel: iPhoneModel, location })
             console.log(`data---<`, data)
             setStockData(data)
             setLoading(false)

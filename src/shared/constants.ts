@@ -97,8 +97,15 @@ export const applePageUrl = {
 }
 
 export const appleAPIUrl = {
-    checkStock: (iPhoneModel: string, storeNumber: string) =>
-        `https://www.apple.com.cn/shop/fulfillment-messages?pl=true&mts.0=regular&mts.1=compact&parts.0=${iPhoneModel}&searchNearby=true&store=${storeNumber}`,
+    checkStock: (iPhoneModel: string, storeNumber?: string, location?: string) => {
+        let url = `https://www.apple.com.cn/shop/fulfillment-messages?pl=true&mts.0=regular`
+        if (storeNumber) {
+            url = `${url}&mts.1=compact&parts.0=${iPhoneModel}&searchNearby=true&store=${storeNumber}`
+        } else {
+            url = `${url}&cppart=UNLOCKED/WW&parts.0=${iPhoneModel}&location=${encodeURIComponent(location)}`
+        }
+        return url
+    },
 }
 
 export const commonHeaders = {
