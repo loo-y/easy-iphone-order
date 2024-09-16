@@ -26,6 +26,12 @@ const StoreStockList: React.FC = () => {
             console.log(`data---<`, data)
             setStockData(data)
             setLoading(false)
+            const hasStock = _.find(data, item => {
+                return item?.pickupAvailable
+            })
+            if (hasStock) {
+                electronServices.playNotication()
+            }
         } catch (error) {
             console.error('Error fetching stock data:', error)
             setLoading(false)

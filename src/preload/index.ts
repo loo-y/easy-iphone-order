@@ -18,4 +18,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getConfig: (key: string) => ipcRenderer.invoke('getConfig', key),
     saveConfig: (key: string, value: ConfigValue) => ipcRenderer.invoke('saveConfig', key, value),
     toggleAlwaysOnTop: () => ipcRenderer.invoke('toggle-always-on-top'),
+    playNotication: () => ipcRenderer.invoke('play-notication'),
 })

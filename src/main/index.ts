@@ -87,7 +87,7 @@ function createTray() {
     }
 
     console.log('创建新的 Tray')
-    tray = new Tray(path.join(__dirname, 'tray-icon.png'))
+    tray = new Tray(path.join(__dirname, './resources/images/tray-icon.png'))
     const contextMenu = Menu.buildFromTemplate([
         {
             label: '显示',

@@ -11,6 +11,9 @@ export const plugins = [
     }),
     new NodePolyfillPlugin(),
     new CopyPlugin({
-        patterns: [{ from: 'src/main/tray-icon.png', to: 'tray-icon.png' }],
+        patterns: [
+            // { from: 'src/main/tray-icon.png', to: 'tray-icon.png' },
+            { from: 'src/resources', to: 'resources' },
+        ],
     }),
 ]

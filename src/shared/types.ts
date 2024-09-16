@@ -18,6 +18,7 @@ interface ElectronAPI {
     getConfig: ({ key }: { key: string }) => Promise<any>
     saveConfig: ({ key, value }: { key: string; value: ConfigValue }) => Promise<any>
     toggleAlwaysOnTop: () => Promise<boolean>
+    playNotication: () => void
 }
 
 export type ConfigValue = Record<string, any> | string | number | boolean
