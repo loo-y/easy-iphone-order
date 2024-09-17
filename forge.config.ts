@@ -30,7 +30,7 @@ const preBuild = async () => {
 const config: ForgeConfig = {
     packagerConfig: {
         asar: true,
-        osxSign: {},
+        // osxSign: {},
     },
     hooks: {
         preMake: async () => {
