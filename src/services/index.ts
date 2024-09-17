@@ -41,7 +41,7 @@ export const electronServices = {
     toggleAlwaysOnTop: async (): Promise<boolean> => {
         return await window.electronAPI.toggleAlwaysOnTop()
     },
-    playNotication: () => {
-        return window.electronAPI.playNotication()
+    playNotication: (params: { openUrl?: string }) => {
+        return window.electronAPI.playNotication(params)
     },
 }

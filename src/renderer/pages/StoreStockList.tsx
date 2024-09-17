@@ -30,7 +30,9 @@ const StoreStockList: React.FC = () => {
                 return item?.pickupAvailable
             })
             if (hasStock) {
-                electronServices.playNotication()
+                electronServices.playNotication({
+                    openUrl: hasStock?.storeUrl || ``,
+                })
             }
         } catch (error) {
             console.error('Error fetching stock data:', error)

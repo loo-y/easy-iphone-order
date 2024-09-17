@@ -29,11 +29,15 @@ export default function apiServices() {
                             state,
                             storeDistanceWithUnit,
                             phoneNumber,
+                            hoursUrl,
+                            makeReservationUrl,
+                            reservationUrl,
                         } = store
                         const partAvailability = partsAvailability?.[iPhoneModel] || {}
                         const { pickupDisplay, pickupSearchQuote, buyability } = partAvailability
                         console.log(`original stores, partAvailability`, partAvailability, buyability)
                         return {
+                            storeUrl: hoursUrl || reservationUrl || makeReservationUrl || ``,
                             storeName,
                             storeNumber,
                             city,
@@ -45,6 +49,9 @@ export default function apiServices() {
                                 buyability?.isBuyable && String(pickupDisplay || '').toLowerCase() == `available`, // String(pickupDisplay || '').toLowerCase() == `available`,
                         }
                     })
+                    // Test pickAvaliable
+                    // resultList[0].pickupAvailable = true;
+
                     // pickupAvailable 为true的排前面
                     resultList = _.sortBy(resultList, store => !store.pickupAvailable)
 
