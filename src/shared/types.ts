@@ -40,7 +40,7 @@ export interface PickupConfig {
 }
 
 export interface SystemConfig {
-    isAlwaysOnTop: boolean
+    isAlwaysOnTop?: boolean
 }
 
 export interface OrderServicesInjects {

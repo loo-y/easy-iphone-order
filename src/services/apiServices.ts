@@ -87,7 +87,7 @@ export default function apiServices() {
     })
 
     ipcMain.handle('getCityList', async (event, { state }: { state: string }) => {
-        const citiesInLocal = getConfig(configKeys.addressCities) || {}
+        const citiesInLocal: Record<string, any> = getConfig(configKeys.addressCities) || {}
         if (!_.isEmpty(citiesInLocal?.[state])) {
             return citiesInLocal[state]
         }
